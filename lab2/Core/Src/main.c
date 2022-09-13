@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "ICM20948.h"
 #include "stdio.h"
+#include "math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,6 +99,7 @@ int main(void)
 	  // not 0
 	  return -1;
   }
+//  Gyro_calibrate(&imu);
 
   char sbuf[3][6];
   /* USER CODE END 2 */
@@ -112,10 +114,15 @@ int main(void)
 	  HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
 
 	  IMU_AccelRead(&imu);
-	  for(uint8_t i = 0; i < 3; i++) {
-		  sprintf(sbuf[i], "%5.2f ", imu.acc[i]);
-		  HAL_UART_Transmit(&huart3, (uint8_t *)sbuf[i], 6, HAL_MAX_DELAY);
-	  }
+//	  for(uint8_t i = 0; i < 3; i++) {
+//		  sprintf(sbuf[i], "%5.2f ", imu.acc[i]);
+//		  HAL_UART_Transmit(&huart3, (uint8_t *)sbuf[i], 6, HAL_MAX_DELAY);
+//	  }
+	  sprintf(sbuf[0], "%5.2f ", atan(imu.acc[0]/imu.acc[2]));
+	  HAL_UART_Transmit(&huart3, (uint8_t *)sbuf[0], 6, HAL_MAX_DELAY);
+	  sprintf(sbuf[1], "%5.2f ", atan(imu.acc[1]/imu.acc[2]));
+	  HAL_UART_Transmit(&huart3, (uint8_t *)sbuf[1], 6, HAL_MAX_DELAY);
+
 	  HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", 2, HAL_MAX_DELAY);
 	  HAL_Delay(50);
   }
